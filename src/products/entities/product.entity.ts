@@ -1,38 +1,42 @@
-import { BeforeInsert, BeforeUpdate, Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { BeforeInsert, BeforeUpdate, Column, Entity, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { ProductImage } from "./product-image.entity";
+import { User } from "src/auth/entities/user.entity";
+import { ApiProperty } from "@nestjs/swagger";
 
 @Entity({name:'products'})
 export class Product {
 
+    @ApiProperty()
     @PrimaryGeneratedColumn('uuid')
     id:string;
 
-
+    @ApiProperty()
     @Column('text', {
         unique:true,
     })
     title:string;
 
-
+    @ApiProperty()
     @Column('float', {
         default:0
     })
     price: number;
 
 
-    @Column({
+    @ApiProperty()  
+     @Column({
         type:'text',
         nullable:true
     })
     description:string;
 
-
+    @ApiProperty()
     @Column('text',{
         unique:true
     })
     slog:string;
 
-
+    @ApiProperty()
     @Column('int',{
         default:0
     })
@@ -44,25 +48,35 @@ export class Product {
     })
     sizes: string[]
 
-
+    @ApiProperty()
     @Column('text')
     gender:string
 
-    //tags
+    @ApiProperty()   //tags
     @Column('text',{
         array:true,
         default:[]
     })
     tags: string[]
+
     
     
     //images
+    @ApiProperty()
     @OneToMany(
     () =>  ProductImage,
     (productImage) => productImage.product,
-    {cascade:true, eager:true, }
+    {eager:true, }
     )
     images?:ProductImage[]
+
+    @ApiProperty()
+    @ManyToOne(
+        ()=>User,
+        (user)=>user.product,
+        {cascade:true, eager:true, }
+    )
+    user:User
 
 
 
